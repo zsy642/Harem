@@ -18,7 +18,7 @@ class Concubine:
     title: str  # 封号
     rank: str  # 当前位分名称
     favor: int = 0  # 宠爱度
-    age: int =16 #年龄,默认16
+    age_day: int =768 #年龄,默认768(16*48)
     experience: int = 0  # 经验值（侍寝增加）
     personality: str = "温柔"  # 性格
     pregnancy_rate: float = 0.1  # 怀孕概率 (0.05 - 0.25)
@@ -27,6 +27,16 @@ class Concubine:
     picture: str = "default_f"  # 立绘ID
     log: List[dict] = field(default_factory=list)  # 个人日志
     palace: str = "储秀宫" # 居住宫殿
+
+    @property
+    def is_alive(self) -> bool:
+        """判断是否存活，方便 UI 和逻辑层调用"""
+        return self.health > 0
+
+    @property
+    def age_years(self) -> int:
+        """换算为年龄(岁)，每年48天"""
+        return self.age_days // 48
 
 
 @dataclass
@@ -45,6 +55,15 @@ class Child:
     picture: str = "default_c"  # 立绘ID
     log: List[dict] = field(default_factory=list)
 
+    @property
+    def is_alive(self) -> bool:
+        """判断是否存活，方便 UI 和逻辑层调用"""
+        return self.health > 0
+
+    @property
+    def age_years(self) -> int:
+        """换算为年龄(岁)，每年48天"""
+        return self.age_days // 48
 
 @dataclass
 class Item:

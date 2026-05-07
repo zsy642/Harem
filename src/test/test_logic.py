@@ -1,7 +1,7 @@
 import pytest
-from code.models import GameState, Concubine, Child, Item, Palace, Rank
+from src.models import GameState, Concubine, Child, Item, Palace, Rank
 # 注意：在 logic.py 编写完成前，以下导入会报错，这是 TDD 的正常过程
-from code.logic import (
+from src.logic import (
     init_new_game,
     advance_to_next_day,
     interact_bedding,
@@ -15,10 +15,10 @@ def basic_state():
     """创建一个基础的游戏状态用于测试"""
     state = init_new_game(family_name="慕容")
     # 手动添加一个妃子用于交互测试
-    c = Concubine(id="c1", name="甄嬛", title="菀", rank="常在", palace="碎玉轩")
+    c = Concubine(id="c1", name="甄嬛", title="菀", rank="常在", palace="景仁宫")
     state.concubine_list.append(c)
     # 为宫殿添加记录
-    p = next((p for p in state.palace_list if p.name == "碎玉轩"), None)
+    p = next((p for p in state.palace_list if p.name == "景仁宫"), None)
     if p:
         p.moved_list.append("c1")
     return state
@@ -100,8 +100,12 @@ def test_pregnancy_and_birth(basic_state):
     # 推进一天触发生产
     res = advance_to_next_day(state)
     assert res["trigger_birth"] is True
-    assert res["mother_id"] == concubine.id
-    # 注意：此时 UI 应该弹出命名框，之后会调用 trigger_birth 逻辑
+
+    # 核心修改点：字典键改为 mother_ids，并检查 concubine.id 是否在列表中
+    assert "mother_ids" in res
+    assert concubine.id in res["mother_ids"]
+
+    # 注意：此时 UI 应该弹出命名框，之后会调用 trigger_birth
 
 
 def test_death_logic(basic_state):
