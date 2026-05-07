@@ -1,0 +1,36 @@
+# Python 编译缓存
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 虚拟环境
+venv/
+env/
+.env/
+
+# PyCharm 等 IDE 配置文件
+.idea/
+.vscode/
+
+# 游戏生成的存档文件
+# 约定游戏存档保存为 JSON，所以忽略掉运行中生成的存档
+/code/saves/
+*.json
+# 如果你有默认的配置文件 assets_map.json 等，可以在下方显式排除：
+# !assets_map.json
+
+#游戏图片和资源
+*.png
+!code/assets/tmp1.png
+!code/assets/tmp2.png
+其它/*
+!其它/TODO+Temporary_Decisions.md
+*.log
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 测试报告或覆盖率文件
+.pytest_cache/
+
