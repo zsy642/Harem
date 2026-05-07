@@ -18,6 +18,7 @@ class Concubine:
     title: str  # 封号
     rank: str  # 当前位分名称
     favor: int = 0  # 宠爱度
+    age: int =16 #年龄,默认16
     experience: int = 0  # 经验值（侍寝增加）
     personality: str = "温柔"  # 性格
     pregnancy_rate: float = 0.1  # 怀孕概率 (0.05 - 0.25)
