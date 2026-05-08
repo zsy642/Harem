@@ -16,3 +16,29 @@
 [] 更完善覆盖更多边界情况的单元测试
 [] config里面那个100改成无限
 [] 重构部分结构把saves改成output/saves,assert下新增picture和font,并修改对应的逻辑和文件
+[] 把字体改成自适应,目前更改成自动扫描会显示
+```
+Traceback (most recent call last):
+  File "D:\develop\source\Py作品集\ai氛围_后宫游戏\src\main.py", line 26, in <module>
+    main()
+    ~~~~^^
+  File "D:\develop\source\Py作品集\ai氛围_后宫游戏\src\main.py", line 18, in main
+    ui_mgr = UIManager(state)
+  File "D:\develop\source\Py作品集\ai氛围_后宫游戏\src\ui_manager\core.py", line 38, in __init__
+    "normal": load_font(24, font_names_to_try),
+              ~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\develop\source\Py作品集\ai氛围_后宫游戏\src\ui_manager\core.py", line 27, in load_font
+    font_path = pygame.font.match_font(font_name)
+  File "D:\develop\source\Py作品集\ai氛围_后宫游戏\.venv\Lib\site-packages\pygame\sysfont.py", line 488, in match_font
+    initsysfonts()
+    ~~~~~~~~~~~~^^
+  File "D:\develop\source\Py作品集\ai氛围_后宫游戏\.venv\Lib\site-packages\pygame\sysfont.py", line 355, in initsysfonts
+    fonts = initsysfonts_win32()
+  File "D:\develop\source\Py作品集\ai氛围_后宫游戏\.venv\Lib\site-packages\pygame\sysfont.py", line 82, in initsysfonts_win32
+    if splitext(font)[1].lower() not in OpenType_extensions:
+       ~~~~~~~~^^^^^^
+  File "<frozen ntpath>", line 244, in splitext
+TypeError: expected str, bytes or os.PathLike object, not int
+
+进程已结束，退出代码为 1
+```
