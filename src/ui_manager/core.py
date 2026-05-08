@@ -2,7 +2,8 @@ import pygame
 import sys
 from src import config
 from src.models import GameState
-from .scenes import main_scene
+# 导入所有场景
+from .scenes import main_scene, harem_scene, warehouse_scene, draft_scene
 
 
 class UIManager:
@@ -16,9 +17,9 @@ class UIManager:
 
         # 加载中文字体 (兼容不同操作系统)
         pygame.font.init()
-        # 直接加载字体文件
+        # 直接加载字体文件 (保留了你的硬编码)
         font_normal_path = "C:/Windows/Fonts/STXIHEI.TTF"
-        font_title_path = "C:/Windows/Fonts/STXIHEI.TTF"  # 和普通字体用同一个文件，只是字号不同
+        font_title_path = "C:/Windows/Fonts/STXIHEI.TTF"
 
         self.fonts = {
             "normal": pygame.font.Font(font_normal_path, 24),
@@ -37,7 +38,6 @@ class UIManager:
             self.images["bg_main"] = pygame.transform.scale(bg, (config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
         except Exception as e:
             print(f"[警告] 图片资源加载失败: {e}")
-            # 如果没找到图片，建一个灰色占位色块防崩溃
             surface = pygame.Surface((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
             surface.fill(config.GRAY)
             self.images["bg_main"] = surface
@@ -50,17 +50,30 @@ class UIManager:
                 sys.exit()
 
             # 状态机路由：根据当前界面分发鼠标/键盘事件
-            if self.state.current_state == "main":
+            curr = self.state.current_state
+            if curr == "main":
                 main_scene.handle_event(event, self.state, self)
-            # 未来这里会增加 elif state == "harem" 等等
+            elif curr == "harem":
+                harem_scene.handle_event(event, self.state, self)
+            elif curr == "warehouse":
+                warehouse_scene.handle_event(event, self.state, self)
+            elif curr == "draft":
+                draft_scene.handle_event(event, self.state, self)
 
     def draw(self):
         """全局绘制控制"""
         self.screen.fill(config.BLACK)
 
         # 状态机路由：根据当前界面绘制对应内容
-        if self.state.current_state == "main":
+        curr = self.state.current_state
+        if curr == "main":
             main_scene.draw(self.screen, self.state, self)
+        elif curr == "harem":
+            harem_scene.draw(self.screen, self.state, self)
+        elif curr == "warehouse":
+            warehouse_scene.draw(self.screen, self.state, self)
+        elif curr == "draft":
+            draft_scene.draw(self.screen, self.state, self)
 
         pygame.display.flip()
 

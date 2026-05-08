@@ -2,23 +2,43 @@ import pygame
 from src import config
 from src.models import GameState
 from src.logic import advance_to_next_day
+from src.ui_manager.components import Button
+
+buttons = {}
+
+
+def init_buttons(ui_mgr):
+    """延迟初始化，确保字体已加载"""
+    if buttons: return
+    font = ui_mgr.fonts.get("normal")
+    cx = config.SCREEN_WIDTH // 2
+
+    # 建立四个导航按钮
+    buttons["sleep"] = Button(cx - 100, 250, 200, 50, "睡觉(进入次日)", font, bg_color=(144, 238, 144))
+    buttons["harem"] = Button(cx - 100, 320, 200, 50, "后宫寝殿", font)
+    buttons["warehouse"] = Button(cx - 100, 390, 200, 50, "内务府(仓库)", font)
+    buttons["draft"] = Button(cx - 100, 460, 200, 50, "大选秀女", font, bg_color=(255, 192, 203))
 
 
 def handle_event(event: pygame.event.Event, state: GameState, ui_mgr):
     """处理主界面的交互事件"""
-    if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
-        mouse_pos = event.pos
+    init_buttons(ui_mgr)
 
-        # 临时“睡觉”按钮的碰撞检测区 (X, Y, W, H)
-        sleep_rect = pygame.Rect(config.SCREEN_WIDTH // 2 - 50, config.SCREEN_HEIGHT // 2, 100, 50)
-
-        if sleep_rect.collidepoint(mouse_pos):
-            # 调用底层逻辑：推进到下一天
-            advance_to_next_day(state)
+    # 检测点击了哪个按钮
+    if buttons["sleep"].is_clicked(event):
+        advance_to_next_day(state)
+    elif buttons["harem"].is_clicked(event):
+        state.current_state = "harem"
+    elif buttons["warehouse"].is_clicked(event):
+        state.current_state = "warehouse"
+    elif buttons["draft"].is_clicked(event):
+        state.current_state = "draft"
 
 
 def draw(screen: pygame.Surface, state: GameState, ui_mgr):
     """绘制主界面"""
+    init_buttons(ui_mgr)
+
     # 1. 绘制背景图
     if "bg_main" in ui_mgr.images:
         screen.blit(ui_mgr.images["bg_main"], (0, 0))
@@ -36,11 +56,6 @@ def draw(screen: pygame.Surface, state: GameState, ui_mgr):
         pygame.draw.rect(screen, config.BLACK, bg_rect, 2)  # 黑色边框
         screen.blit(time_surface, (30, 25))
 
-        # 3. 绘制临时“睡觉”按钮
-        sleep_rect = pygame.Rect(config.SCREEN_WIDTH // 2 - 50, config.SCREEN_HEIGHT // 2, 100, 50)
-        pygame.draw.rect(screen, (100, 200, 100), sleep_rect)  # 绿色底色
-        pygame.draw.rect(screen, config.BLACK, sleep_rect, 2)  # 黑色边框
-
-        sleep_text = font.render("睡觉", True, config.BLACK)
-        text_rect = sleep_text.get_rect(center=sleep_rect.center)
-        screen.blit(sleep_text, text_rect)
+    # 3. 绘制所有按钮
+    for btn in buttons.values():
+        btn.draw(screen)
