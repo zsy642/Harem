@@ -22,7 +22,7 @@ MONTHS_PER_YEAR = 12
 
 # --- 初始数据预设 ---
 
-# 1. 初始宫殿配置 
+# 1. 初始宫殿配置
 # MVP 阶段 capacity 设为 3，储秀宫和重华宫设为极大值
 INITIAL_PALACES = [
     {"name": "储秀宫", "capacity": 100},  # 初始待命处
