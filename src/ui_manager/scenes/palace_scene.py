@@ -4,23 +4,17 @@ from src.ui_manager.components import Button, draw_text
 
 buttons = {}
 
-
 def init_buttons(ui_mgr):
-    """确保按钮只初始化一次"""
     if "back" not in buttons:
         buttons["back"] = Button(20, config.SCREEN_HEIGHT - 70, 100, 50, "返回", ui_mgr.fonts.get("normal"))
 
-
 def handle_event(event, state, ui_mgr):
-    init_buttons(ui_mgr)  # 初始化
-    if event and buttons["back"].is_clicked(event):  # 增加 event 判空
+    init_buttons(ui_mgr)
+    if event and buttons["back"].is_clicked(event):
         state.current_state = "main"
 
-
 def draw(screen, state, ui_mgr):
-    init_buttons(ui_mgr)  # 初始化
-
-    screen.fill((70, 70, 40))
-    draw_text(screen, "--- 大选秀女 ---", ui_mgr.fonts.get("title"), config.WHITE, config.SCREEN_WIDTH // 2, 100, True)
-
+    init_buttons(ui_mgr)
+    screen.fill((60, 40, 60))  # 紫色
+    draw_text(screen, "--- 东西六宫 (妃嫔寝宫) ---", ui_mgr.fonts.get("title"), config.WHITE, config.SCREEN_WIDTH//2, 100, True)
     buttons["back"].draw(screen)

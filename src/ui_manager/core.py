@@ -2,38 +2,35 @@ import pygame
 import sys
 from src import config
 from src.models import GameState
-# 导入所有场景
-from .scenes import main_scene, harem_scene, warehouse_scene, draft_scene
+# 导入所有具体的场景文件
+from .scenes import (
+    main_scene, palace_scene, emperor_palace_scene,
+    draft_scene, child_scene, travel_scene, storehouse_scene
+)
 
 
 class UIManager:
     def __init__(self, state: GameState):
-        """初始化 Pygame 和 游戏窗口"""
         pygame.init()
         self.screen = pygame.display.set_mode((config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
-        pygame.display.set_caption("后宫模拟器")
+        pygame.display.set_caption("后宫模拟器 - 完整导航架构")
         self.clock = pygame.time.Clock()
         self.state = state
 
-        # 加载中文字体 (兼容不同操作系统)
+        # 加载中文字体 (保留你的修复)
         pygame.font.init()
-        # 直接加载字体文件 (保留了你的硬编码)
-        font_normal_path = "C:/Windows/Fonts/STXIHEI.TTF"
-        font_title_path = "C:/Windows/Fonts/STXIHEI.TTF"
-
+        font_path = "C:/Windows/Fonts/STXIHEI.TTF"
         self.fonts = {
-            "normal": pygame.font.Font(font_normal_path, 24),
-            "title": pygame.font.Font(font_title_path, 36)
+            "normal": pygame.font.Font(font_path, 24),
+            "title": pygame.font.Font(font_path, 36)
         }
 
-        # 资源缓存字典
         self.images = {}
         self._load_resources()
 
     def _load_resources(self):
         """预加载图片资源"""
         try:
-            # 加载占位背景，并缩放至窗口大小
             bg = pygame.image.load(config.PICTURE_LIBRARY["bg_main"]).convert()
             self.images["bg_main"] = pygame.transform.scale(bg, (config.SCREEN_WIDTH, config.SCREEN_HEIGHT))
         except Exception as e:
@@ -43,42 +40,51 @@ class UIManager:
             self.images["bg_main"] = surface
 
     def handle_events(self):
-        """全局事件分发"""
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
 
-            # 状态机路由：根据当前界面分发鼠标/键盘事件
-            curr = self.state.current_state
-            if curr == "main":
+            # --- 全局路由分发 ---
+            s = self.state.current_state
+            if s == "main":
                 main_scene.handle_event(event, self.state, self)
-            elif curr == "harem":
-                harem_scene.handle_event(event, self.state, self)
-            elif curr == "warehouse":
-                warehouse_scene.handle_event(event, self.state, self)
-            elif curr == "draft":
+            elif s == "palace":
+                palace_scene.handle_event(event, self.state, self)
+            elif s == "emperor_palace":
+                emperor_palace_scene.handle_event(event, self.state, self)
+            elif s == "draft":
                 draft_scene.handle_event(event, self.state, self)
+            elif s == "child":
+                child_scene.handle_event(event, self.state, self)
+            elif s == "travel":
+                travel_scene.handle_event(event, self.state, self)
+            elif s == "storehouse":
+                storehouse_scene.handle_event(event, self.state, self)
 
     def draw(self):
-        """全局绘制控制"""
         self.screen.fill(config.BLACK)
 
-        # 状态机路由：根据当前界面绘制对应内容
-        curr = self.state.current_state
-        if curr == "main":
+        # --- 全局绘制分发 ---
+        s = self.state.current_state
+        if s == "main":
             main_scene.draw(self.screen, self.state, self)
-        elif curr == "harem":
-            harem_scene.draw(self.screen, self.state, self)
-        elif curr == "warehouse":
-            warehouse_scene.draw(self.screen, self.state, self)
-        elif curr == "draft":
+        elif s == "palace":
+            palace_scene.draw(self.screen, self.state, self)
+        elif s == "emperor_palace":
+            emperor_palace_scene.draw(self.screen, self.state, self)
+        elif s == "draft":
             draft_scene.draw(self.screen, self.state, self)
+        elif s == "child":
+            child_scene.draw(self.screen, self.state, self)
+        elif s == "travel":
+            travel_scene.draw(self.screen, self.state, self)
+        elif s == "storehouse":
+            storehouse_scene.draw(self.screen, self.state, self)
 
         pygame.display.flip()
 
     def run(self):
-        """游戏主循环"""
         while True:
             self.handle_events()
             self.draw()
