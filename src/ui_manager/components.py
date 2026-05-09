@@ -55,3 +55,31 @@ def draw_text(screen: pygame.Surface, text: str, font: pygame.font.Font, color: 
         screen.blit(text_surface, text_rect)
     else:
         screen.blit(text_surface, (x, y))
+
+class InputBox:
+    """简单的文本输入框"""
+    def __init__(self, x, y, w, h, font, text=''):
+        self.rect = pygame.Rect(x, y, w, h)
+        self.color = config.GOLD
+        self.font = font
+        self.text = text
+        self.txt_surface = font.render(text, True, self.color)
+        self.active = True
+
+    def handle_event(self, event):
+        if event.type == pygame.KEYDOWN:
+            if self.active:
+                if event.key == pygame.K_RETURN:
+                    return "SUBMIT"
+                elif event.key == pygame.K_BACKSPACE:
+                    self.text = self.text[:-1]
+                else:
+                    if len(self.text) < 4: # 限制名字长度
+                        self.text += event.unicode
+                self.txt_surface = self.font.render(self.text, True, self.color)
+
+    def draw(self, screen):
+        # 画底色和边框
+        pygame.draw.rect(screen, (30, 30, 30), self.rect)
+        pygame.draw.rect(screen, self.color, self.rect, 2)
+        screen.blit(self.txt_surface, (self.rect.x+10, self.rect.y+10))

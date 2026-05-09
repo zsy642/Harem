@@ -5,7 +5,7 @@ from src.models import GameState
 # 导入所有具体的场景文件
 from .scenes import (
     main_scene, palace_scene, emperor_palace_scene,
-    draft_scene, child_scene, travel_scene, storehouse_scene
+    draft_scene, child_scene, travel_scene, storehouse_scene, naming_scene,game_over_scene
 )
 
 
@@ -16,6 +16,7 @@ class UIManager:
         pygame.display.set_caption("后宫模拟器 - 完整导航架构")
         self.clock = pygame.time.Clock()
         self.state = state
+        self.birth_queue = []  # 待处理的生产事件队列
 
         # 加载中文字体 (保留你的修复)
         pygame.font.init()
@@ -49,6 +50,10 @@ class UIManager:
             s = self.state.current_state
             if s == "main":
                 main_scene.handle_event(event, self.state, self)
+            elif s == "naming":
+                naming_scene.handle_event(event, self.state, self)
+            elif s == "game_over":
+                game_over_scene.handle_event(event, self.state, self)
             elif s == "palace":
                 palace_scene.handle_event(event, self.state, self)
             elif s == "emperor_palace":
@@ -69,6 +74,10 @@ class UIManager:
         s = self.state.current_state
         if s == "main":
             main_scene.draw(self.screen, self.state, self)
+        elif s == "naming":
+            naming_scene.draw(self.screen, self.state, self)
+        elif s == "game_over":
+            game_over_scene.draw(self.screen, self.state, self)
         elif s == "palace":
             palace_scene.draw(self.screen, self.state, self)
         elif s == "emperor_palace":
@@ -89,3 +98,4 @@ class UIManager:
             self.handle_events()
             self.draw()
             self.clock.tick(config.FPS)
+

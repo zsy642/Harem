@@ -11,7 +11,7 @@ from src.ui_manager.core import UIManager
 def main():
     print("正在初始化游戏数据...")
     # 1. 初始化全新的游戏数据（开局）
-    state = init_new_game(family_name="慕容")
+    state = init_new_game(family_name="慕容") #TODO:实现玩家输入名字和持久化存储
 
     print("正在启动 UI 管理器...")
     # 2. 启动 UI 管理器并绑定状态
